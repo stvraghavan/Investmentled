@@ -1,3 +1,4 @@
+import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
@@ -25,10 +26,10 @@ config.browser_user_agent = user_agent
 config.request_timeout = 10
 
 # save the company name in a variable
-company_name = input("Please provide the name of the Company or a Ticker: ")
+company_name = st.text_input("Please provide the name of the Company or a Ticker: ")
 #As long as the company name is valid, not empty...
 if company_name != '':
-    print(f'Searching for and analyzing {company_name}, Please be patient, it might take a while...')
+    st.write(f'Searching for and analyzing {company_name}, Please be patient, it might take a while...')
 
     #Extract News with Google News
     googlenews = GoogleNews(start=yesterday,end=now)
@@ -36,7 +37,7 @@ if company_name != '':
     result = googlenews.result()
     #store the results
     df = pd.DataFrame(result)
-    print(df)
+    st.write(df)
 
 try:
     list =[] #creating an empty list 
@@ -61,12 +62,12 @@ try:
     # print(check_empty)
     if check_empty == False:
       news_df=pd.DataFrame(list) #creating dataframe
-      print(news_df)
+      st.write(news_df)
 
 except Exception as e:
     #exception handling
-    print("exception occurred:" + str(e))
-    print('Looks like, there is some error in retrieving the data, Please try again or try with a different ticker.' )
+    st.write("exception occurred:" + str(e))
+    st.write('Looks like, there is some error in retrieving the data, Please try again or try with a different ticker.' )
 
 #Sentiment Analysis
 def percentage(part,whole):
@@ -111,9 +112,9 @@ neutral_list = pd.DataFrame(neutral_list)
 negative_list = pd.DataFrame(negative_list)
 positive_list = pd.DataFrame(positive_list)
 #using len(length) function for counting
-print("Positive Sentiment:", '%.2f' % len(positive_list), end='\n')
-print("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n')
-print("Negative Sentiment:", '%.2f' % len(negative_list), end='\n')
+st.write("Positive Sentiment:", '%.2f' % len(positive_list), end='\n')
+st.write("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n')
+st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n')
 
 #Creating PieCart
 labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
@@ -137,19 +138,19 @@ def word_cloud(text):
     fig.tight_layout(pad=0)
     plt.show()
 
-print('Wordcloud for ' + company_name)
+st.write('Wordcloud for ' + company_name)
 word_cloud(news_df['Summary'].values)
 
 nltk.download('vader_lexicon') #required for Sentiment Analysis
 
 #Get user input
-query = input("Query: ")
+query = company_name
 
 #As long as the query is valid (not empty or equal to '#')...
 if query != '':
-    noOfTweet = input("Enter the number of tweets you want to Analyze: ")
+    noOfTweet = st.text_input("Enter the number of tweets you want to Analyze: ")
     if noOfTweet != '' :
-        noOfDays = input("Enter the number of days you want to Scrape Twitter for: ")
+        noOfDays = st.text_input("Enter the number of days you want to Scrape Twitter for: ")
         if noOfDays != '':
                 #Creating list to append tweet data
                 tweets_list = []
@@ -165,7 +166,7 @@ if query != '':
                 #Creating a dataframe from the tweets list above 
                 df = pd.DataFrame(tweets_list, columns=['Datetime', 'Tweet Id', 'Text', 'Username'])
 
-                print(df)
+                st.write(df)
 
 # Create a function to clean the tweets
 def cleanTxt(text):
@@ -221,10 +222,10 @@ neutral_list = pd.DataFrame(neutral_list)
 negative_list = pd.DataFrame(negative_list)
 positive_list = pd.DataFrame(positive_list)
 #using len(length) function for counting
-print("Since " + noOfDays + " days, there have been", len(tweet_list1) ,  "tweets on " + query, end='\n*')
-print("Positive Sentiment:", '%.2f' % len(positive_list), end='\n*')
-print("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n*')
-print("Negative Sentiment:", '%.2f' % len(negative_list), end='\n*')
+st.write("Since " + noOfDays + " days, there have been", len(tweet_list1) ,  "tweets on " + query, end='\n*')
+st.write("Positive Sentiment:", '%.2f' % len(positive_list), end='\n*')
+st.write("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n*')
+st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n*')
 
 #Creating PieCart**
 
@@ -249,5 +250,5 @@ def word_cloud(text):
     fig.tight_layout(pad=0)
     plt.show()
 
-print('Wordcloud for ' + query)
+st.write('Wordcloud for ' + query)
 word_cloud(df['Text'].values)
