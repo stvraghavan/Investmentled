@@ -120,12 +120,12 @@ st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n')
 labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
 sizes = [positive, neutral, negative]
 colors = ['yellowgreen', 'blue','red']
-patches, texts = plt.pie(sizes,colors=colors, startangle=90)
+fig, patches, texts = plt.pie(sizes,colors=colors, startangle=90)
 plt.style.use('default')
 plt.legend(labels)
 plt.title("Sentiment Analysis Result for stock= "+company_name+"" )
 plt.axis('equal')
-plt.show()
+st.pyplot(fig)
 
 # Word cloud visualization
 def word_cloud(text):
@@ -136,10 +136,10 @@ def word_cloud(text):
     plt.imshow(wordCloud)
     ax.axis("off")
     fig.tight_layout(pad=0)
-    plt.show()
+    st.pyplot(fig)
 
 st.write('Wordcloud for ' + company_name)
-word_cloud(news_df['Summary'].values)
+st.word_cloud(news_df['Summary'].values)
 
 nltk.download('vader_lexicon') #required for Sentiment Analysis
 

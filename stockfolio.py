@@ -13,7 +13,7 @@ from pypfopt import  risk_models
 from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
-stocksymbols = ['ACC','ADANIENT','ADANIGREEN','ADANIPORTS','ADANITRANS','AMBUJACEM','APOLLOHOSP','ASIANPAINT','DMART','AXISBANK','BAJAJ-AUTO','BAJFINANCE','BAJAJFINSV','BAJAJHLDNG','BANDHANBNK','BANKBARODA','BERGEPAINT','BPCL','BHARTIARTL','BIOCON','BOSCHLTD','BRITANNIA','CHOLAFIN','CIPLA','DLF','DABUR','DIVISLAB','DRREDDY','EICHERMOT','NYKAA','GAIL','GODREJCP','GRASIM','HCLTECH','HDFCAMC','HDFCBANK','HDFCLIFE','HAVELLS','HEROMOTOCO','HINDALCO','HINDUNILVR','HDFC','ICICIBANK','ICICIGI','ICICIPRULI','ITC','IOC','INDUSTOWER','INDUSINDBK','NAUKRI','INFY','INDIGO','JSWSTEEL','JUBLFOOD','KOTAKBANK','LTI','LT','LUPIN','M&M','MARICO','MARUTI','MINDTREE','MUTHOOTFIN','NMDC','NTPC','NESTLEIND','ONGC','PAYTM','PIIND','PIDILITIND','PEL','POWERGRID','PGHH','PNB','RELIANCE','SBICARD','SBILIFE','SRF','SHREECEM','SIEMENS','SBIN','SAIL','SUNPHARMA','TCS','TATACONSUM','TATAMOTORS','TATASTEEL','TECHM','TITAN','TORNTPHARM','UPL','ULTRACEMCO','MCDOWELL-N','VEDL','WIPRO','ZOMATO','ZYDUSLIFE']
+stocksymbols = ['ACC','VEDL','WIPRO','ZOMATO','ZYDUSLIFE']
 #stocksymbols = ['IRCTC']
 startdate = date(2019,10,14)
 end_date = date.today()
@@ -36,7 +36,7 @@ for i in df.columns.values :
     ax.plot(df[i], label = i)
 ax.set_title("Portfolio Close Price History")
 ax.set_xlabel('Date', fontsize=18)
-ax.set_ylabel('Close Price INR (₨)' , fontsize=18)
+ax.set_ylabel('Close Price INR (Rs)' , fontsize=18)
 ax.legend(df.columns.values , loc = 'upper left')
 st.pyplot(fig)
 
