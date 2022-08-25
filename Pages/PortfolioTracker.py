@@ -16,9 +16,13 @@ from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 
 with tab1:
-    col1 , col2 = st.columns([3,2])
+    col1 , col2 = st.columns([2,3])
 
     with col1:
+        NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/Data/EQUITY_L.csv")
+        st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
+        
+    with col2:
         stocksymbols = ['ACC','VEDL','WIPRO','ZOMATO','ZYDUSLIFE']
         #stocksymbols = ['IRCTC']
         startdate = date(2019,10,14)
@@ -99,15 +103,12 @@ with tab1:
         ax.set_xlabel('Date')
         ax.set_ylabel('Growth of ₨ 1 investment')
         st.pyplot(fig)
-    with col2:
-        NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/Data/EQUITY_L.csv")
-        st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
 
 with tab2:
 
-    col1,col2 = st.columns([3,1])
+    col1,col2 = st.columns([2,3])
 
-    with col1:
+    with col2:
         mean = expected_returns.mean_historical_return(df)
 
         S = risk_models.sample_cov(df) # for sample covariance matrix
@@ -162,6 +163,6 @@ with tab2:
             st.write('Number of stocks to buy with the amount of Rs ' + str(portfolio_amount))
             st.write(portfolio_df)
             st.write('Funds remaining with you will be: Rs' , int(leftover))
-    with col2:
+    with col1:
         NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/Data/EQUITY_L.csv")
         st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
