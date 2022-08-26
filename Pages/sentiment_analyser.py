@@ -15,7 +15,7 @@ import plotly.express as px
 
 nltk.download('vader_lexicon') #required for Sentiment Analysis
 
-tab1,tab2 = st.tabs(["Twitter","Google News"])
+tab1,tab2 = st.tabs(["Google News","Twitter"])
 
 with tab1:
     now = dt.date.today()
@@ -129,7 +129,7 @@ with tab1:
                     'Positive ['+str(round(positive))+'%]':'green',
                     'Neutral ['+str(round(neutral))+'%]':'blue',
                     'Negative ['+str(round(negative))+'%]':'red'
-                })
+                },title="Sentiment Analyser for company"+company_name+"")
     st.plotly_chart(fig)
 
     # Word cloud visualization
@@ -144,7 +144,7 @@ with tab1:
         st.pyplot(fig)
 
     st.write('Wordcloud for ' + company_name)
-    st.word_cloud(news_df['Summary'].values)
+    word_cloud(news_df['Summary'].values)
 
 with tab2:
     #Get user input
@@ -152,9 +152,9 @@ with tab2:
 
     #As long as the query is valid (not empty or equal to '#')...
     if query != '':
-        noOfTweet = st.text_input("Enter the number of tweets you want to Analyze: ")
+        noOfTweet = '100'
         if noOfTweet != '' :
-            noOfDays = st.text_input("Enter the number of days you want to Scrape Twitter for: ")
+            noOfDays = '2'
             if noOfDays != '':
                     #Creating list to append tweet data
                     tweets_list = []
@@ -236,12 +236,14 @@ with tab2:
     labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
     sizes = [positive, neutral, negative]
     colors = ['yellowgreen', 'blue','red']
-    patches, texts = plt.pie(sizes,colors=colors, startangle=90)
-    plt.style.use('default')
-    plt.legend(labels)
-    plt.title("Sentiment Analysis Result for keyword= "+query+"" )
-    plt.axis('equal')
-    plt.show()
+    fig = px.pie(sizes,values=sizes,names=labels,color=labels,
+                color_discrete_map={
+                    'Positive ['+str(round(positive))+'%]':'green',
+                    'Neutral ['+str(round(neutral))+'%]':'blue',
+                    'Negative ['+str(round(negative))+'%]':'red'
+                },title="Sentiment Analysis Result for keyword= "+query+"")
+    st.plotly_chart(fig)
+    
 
     # word cloud visualization
     def word_cloud(text):
@@ -252,7 +254,7 @@ with tab2:
         plt.imshow(wordCloud)
         ax.axis("off")
         fig.tight_layout(pad=0)
-        plt.show()
+        st.pyplot(fig)
 
     st.write('Wordcloud for ' + query)
     word_cloud(df['Text'].values)
