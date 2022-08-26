@@ -12,9 +12,9 @@ st.markdown("""
     
         1. Stock tracking📈
         2. Sentiment analysis of news and twitter😀😍😫😔🤑☹️😨🤯😭
-        3. Portfolio optimiser🥸🎯🐂🐻
+        3. Portfolio optimiser🎯🐂🐻
 
-        **We use Open-Source software to provide you with the service so it's perfectly safe**
+        **We use Open-Source software to provide you with the service so it's perfectly safe and free**
 
  """)
 
