@@ -15,6 +15,8 @@ import plotly.express as px
 
 nltk.download('vader_lexicon') #required for Sentiment Analysis
 
+st.title("Stockfolio💲💲💲")
+
 tab1,tab2 = st.tabs(["Google News","Twitter"])
 
 with tab1:

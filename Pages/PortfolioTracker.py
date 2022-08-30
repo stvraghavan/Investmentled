@@ -13,6 +13,8 @@ from pypfopt import  risk_models
 from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
+st.title("Stockfolio💲💲💲")
+
 tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 
 with tab1:
