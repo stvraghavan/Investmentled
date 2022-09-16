@@ -20,7 +20,7 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("D:\Programming\Stockfolio\EQUITY_L.csv")
+        NSE_data = pd.read_csv("D:\Tilak Files\Sem-9\Stockfolio\EQUITY_L.csv")
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
         
