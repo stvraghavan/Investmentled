@@ -3,7 +3,7 @@ import numpy as np
 from nsepy import get_history as gh
 
 def get_data():
-    symbols = pd.read_csv("Data\EQUITY_L.csv")
+    symbols = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
     return symbols
 
 def make_data(stocksymbols,startdate,end_date):
