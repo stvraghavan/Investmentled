@@ -6,7 +6,7 @@ def get_data():
     symbols = pd.read_csv("Data\EQUITY_L.csv")
     return symbols
 
-def make_data(stocksymbols):
+def make_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
     for i in range(len(stocksymbols)):
         data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
