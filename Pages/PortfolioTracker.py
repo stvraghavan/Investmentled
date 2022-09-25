@@ -4,7 +4,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import seaborn as sb
-from datetime import date
+from datetime import date, timedelta
 from nsepy import get_history as gh
 plt.style.use('fivethirtyeight') #setting matplotlib style
 
@@ -20,15 +20,14 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("D:\Tilak Files\Sem-9\Stockfolio\EQUITY_L.csv")
+        NSE_data = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
         
-    user_data = st.text_input("Enter the stock symbols you want",placeholder="Please seperate the stocks with a comma (,)")
-    tickers = user_data.split(",")
-    stocksymbols = tickers
+    user_data = st.multiselect("Enter the stock symbols you want",NSE_data['SYMBOL'])
+    stocksymbols = user_data
     #stocksymbols = ['IRCTC']
-    startdate = date(2019,10,14)
+    startdate = date.today - timedelta(days=180)
     end_date = date.today()
     #st.write(end_date)
     st.write(f"You have {len(stocksymbols)} assets in your porfolio" )
@@ -44,23 +43,23 @@ with tab1:
             df = df.join(data)
     #df
 
-    fig, ax = plt.subplots(figsize=(15,8))
-    for i in df.columns.values :
-        ax.plot(df[i], label = i)
-    ax.set_title("Portfolio Close Price History")
-    ax.set_xlabel('Date', fontsize=18)
-    ax.set_ylabel('Close Price INR (Rs)' , fontsize=18)
-    ax.legend(df.columns.values , loc = 'upper left')
-    st.pyplot(fig)
+    # '''fig, ax = plt.subplots(figsize=(15,8))
+    # for i in df.columns.values :
+    #     ax.plot(df[i], label = i)
+    # ax.set_title("Portfolio Close Price History")
+    # ax.set_xlabel('Date', fontsize=18)
+    # ax.set_ylabel('Close Price INR (Rs)' , fontsize=18)
+    # ax.legend(df.columns.values , loc = 'upper left')
+    # st.pyplot(fig)
 
-    correlation_matrix = df.corr(method='pearson')
-    #correlation_matrix
+    # correlation_matrix = df.corr(method='pearson')
+    # #correlation_matrix
 
-    fig1 = plt.figure()
-    sb.heatmap(correlation_matrix,xticklabels=correlation_matrix.columns, yticklabels=correlation_matrix.columns,
-    cmap='YlGnBu', annot=True, linewidth=0.5)
-    st.write('Correlation between Stocks in your portfolio')
-    st.pyplot(fig1)
+    # fig1 = plt.figure()
+    # sb.heatmap(correlation_matrix,xticklabels=correlation_matrix.columns, yticklabels=correlation_matrix.columns,
+    # cmap='YlGnBu', annot=True, linewidth=0.5)
+    # st.write('Correlation between Stocks in your portfolio')
+    # st.pyplot(fig1)'''
 
     daily_simple_return = df.pct_change(1)
     daily_simple_return.dropna(inplace=True)
@@ -114,12 +113,12 @@ with tab2:
     S = risk_models.sample_cov(df) # for sample covariance matrix
     #S
 
-    plt.style.use('ggplot')
-    fig = plt.figure()
-    sb.heatmap(S,xticklabels=S.columns, yticklabels=S.columns,
-    cmap='RdBu_r', annot=True, linewidth=0.5)
-    st.write('Covariance between daily simple returns of stocks in your portfolio')
-    st.pyplot(fig)
+    # plt.style.use('ggplot')
+    # fig = plt.figure()
+    # sb.heatmap(S,xticklabels=S.columns, yticklabels=S.columns,
+    # cmap='RdBu_r', annot=True, linewidth=0.5)
+    # st.write('Covariance between daily simple returns of stocks in your portfolio')
+    # st.pyplot(fig)
 
     ef = EfficientFrontier(mean,S)
     weights = ef.max_sharpe() #for maximizing the Sharpe ratio #Optimization
