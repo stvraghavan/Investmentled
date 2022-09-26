@@ -20,14 +20,14 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
+        NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
         
     user_data = st.multiselect("Enter the stock symbols you want",NSE_data['SYMBOL'])
     stocksymbols = user_data
     #stocksymbols = ['IRCTC']
-    startdate = date.today - timedelta(days=180)
+    startdate = date.today() - timedelta(days=180)
     end_date = date.today()
     #st.write(end_date)
     st.write(f"You have {len(stocksymbols)} assets in your porfolio" )
