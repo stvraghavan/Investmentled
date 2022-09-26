@@ -1,20 +1,21 @@
-from Functions import make_data,get_data,daily_simple_return
+import Functions
 from datetime import date, timedelta
 import pandas as pd
+import numpy as np
 
 start_date = date.today() - timedelta(days=180)
 end_date = date.today()
 
-tickers = pd.DataFrame()
+stocks = Functions.get_data()
 
-tickers = get_data()
+sym = stocks['SYMBOL']
 
-dataframe = pd.DataFrame()
+sym = list(sym)
 
-dataframe = make_data(tickers,startdate=start_date,end_date=end_date)
+dataframe = Functions.make_data(sym,startdate=start_date,end_date=end_date)
 
 dsr = []
 
-dsr = daily_simple_return(dataframe)
+dsr = Functions.daily_simple_return(dataframe)
 
 print(dsr.sort_values())
