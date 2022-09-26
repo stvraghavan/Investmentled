@@ -7,4 +7,4 @@ data = pd.DataFrame()
 
 data = pd.read_csv(url)
 
-data.to_csv("D:/Programming/Stockfolio/EQUITY_L.csv")
+data.to_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
