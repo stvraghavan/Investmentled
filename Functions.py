@@ -3,7 +3,7 @@ import numpy as np
 from nsepy import get_history as gh
 
 def get_data():
-    symbols = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
+    symbols = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
     return symbols
 
 def make_data(stocksymbols,startdate,end_date):
@@ -13,9 +13,9 @@ def make_data(stocksymbols,startdate,end_date):
         data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
         data.drop(['Symbol'], axis=1,inplace=True)
         if i == 0:
-            df = data
+            data_frame = data
         if i != 0:
-            df = df.join(data)
+            data_frame = data_frame.join(data)
     return data_frame
 
 def daily_simple_return(data_frame):
