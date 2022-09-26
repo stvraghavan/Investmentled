@@ -1,4 +1,4 @@
-import Functions
+from Functions import make_data,get_data,daily_simple_return
 from datetime import date, timedelta
 import pandas as pd
 
@@ -7,14 +7,14 @@ end_date = date.today()
 
 tickers = pd.DataFrame()
 
-tickers = Functions.get_data()
+tickers = get_data()
 
 dataframe = pd.DataFrame()
 
-dataframe = Functions.make_data(tickers,startdate=start_date,end_date=end_date)
+dataframe = make_data(tickers,startdate=start_date,end_date=end_date)
 
 dsr = []
 
-dsr = Functions.daily_simple_return(dataframe)
+dsr = daily_simple_return(dataframe)
 
 print(dsr.sort_values())
