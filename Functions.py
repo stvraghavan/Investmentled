@@ -9,13 +9,16 @@ def get_data():
 def make_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
     for i in range(len(stocksymbols)):
-        data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
-        data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
-        data.drop(['Symbol'], axis=1,inplace=True)
-        if i == 0:
-            data_frame = data
-        if i != 0:
-            data_frame = data_frame.join(data)
+        try:
+            data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
+            data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
+            data.drop(['Symbol'], axis=1,inplace=True)
+            if i == 0:
+                data_frame = data
+            if i != 0:
+                data_frame = data_frame.join(data)
+        except:
+            pass
     return data_frame
 
 def daily_simple_return(data_frame):
