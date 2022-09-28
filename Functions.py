@@ -4,12 +4,12 @@ from nsepy import get_history as gh
 from tqdm import tqdm
 
 def get_data():
-    symbols = pd.read_csv("EQUITY_L.csv")
+    symbols = pd.read_csv("data.csv")
     return symbols
 
 def make_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
-    for i in range(len(stocksymbols)):
+    for i in tqdm(range(len(stocksymbols))):
         try:
             data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
             data.rename(columns={'Close':data['Symbol'][0]},inplace=True)

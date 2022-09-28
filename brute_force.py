@@ -8,7 +8,7 @@ end_date = date.today()
 
 stocks = Functions.get_data()
 
-sym = stocks['SYMBOL']
+sym = stocks['Symbol']
 
 sym = list(sym)
 
