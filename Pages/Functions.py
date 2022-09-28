@@ -4,7 +4,7 @@ from nsepy import get_history as gh
 from tqdm import tqdm
 
 def get_data():
-    symbols = pd.read_csv("data.csv")
+    symbols = pd.read_csv("C:/Users/tilak/Downloads/ind_nifty50list.csv")
     return symbols
 
 def make_data(stocksymbols,startdate,end_date):

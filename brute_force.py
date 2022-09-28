@@ -14,8 +14,7 @@ sym = list(sym)
 
 dataframe = Functions.make_data(sym,startdate=start_date,end_date=end_date)
 
-dsr = []
+avg_ret = Functions.daily_simple_return(dataframe)
 
-dsr = Functions.daily_simple_return(dataframe)
-
-print(dsr)
+print(type(avg_ret))
+print(avg_ret.sort_values(ascending=False))
