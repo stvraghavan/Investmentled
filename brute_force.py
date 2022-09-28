@@ -8,10 +8,13 @@ end_date = date.today()
 
 stocks = Functions.get_data()
 
-sym = stocks['SYMBOL']
+sym = stocks['Symbol']
 
 sym = list(sym)
 
 data = Functions.make_data(sym, start_date, end_date)
 
-print(data)
+avg_ret = Functions.daily_simple_return(data)
+
+print(type(avg_ret))
+print(avg_ret.sort_values(ascending=False))
