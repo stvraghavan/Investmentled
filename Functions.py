@@ -9,9 +9,9 @@ def get_data():
 
 def make_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
-    for i in tqdm(stocksymbols):
+    for i in range(len(stocksymbols)):
         try:
-            data = gh(symbol=i,start=startdate, end=(end_date))[['Symbol','Close']]
+            data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
             data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
             data.drop(['Symbol'], axis=1,inplace=True)
             if i == 0:
