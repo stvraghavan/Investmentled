@@ -18,4 +18,4 @@ dsr = []
 
 dsr = Functions.daily_simple_return(dataframe)
 
-print(dsr.sort_values())
+print(dsr)
