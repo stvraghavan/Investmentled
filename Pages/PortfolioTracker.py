@@ -13,6 +13,8 @@ from pypfopt import  risk_models
 from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
+import Functions
+
 st.title("Stockfolio💲💲💲")
 
 tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
@@ -20,9 +22,19 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
+        NSE_data = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
+    with st.expander("Top Performing Stocks"):
+        start_date = date.today() - timedelta(days=180)
+        end_date = date.today()
+        stocks = Functions.get_data()
+        sym = stocks['Symbol']
+        sym = list(sym)
+        dataframe = Functions.make_data(sym,startdate=start_date,end_date=end_date)
+        avg_ret = Functions.daily_simple_return(dataframe)
+        st.write(avg_ret.sort_values(ascending=False).head())
+
         
     user_data = st.multiselect("Enter the stock symbols you want",NSE_data['SYMBOL'])
     stocksymbols = user_data

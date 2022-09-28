@@ -3,8 +3,12 @@ import numpy as np
 from nsepy import get_history as gh
 from tqdm import tqdm
 
-def get_data():
-    symbols = pd.read_csv("C:/Users/tilak/Downloads/ind_nifty50list.csv")
+def get_50data():
+    symbols = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/ind_nifty50list.csv")
+    return symbols
+
+def get_all_data():
+    symbols = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
     return symbols
 
 def make_data(stocksymbols,startdate,end_date):

@@ -13,13 +13,14 @@ from tqdm import tqdm
 import warnings
 import plotly.graph_objects as go
 import Functions
-
+import streamlit as st
 #stocks = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
 #stocks = stocks[stocks['SERIES'] == 'EQ']
 today = datetime.today()
 start_date = today - timedelta(days=1825)
 end_date = today
-tickers = ['TCS']
+data = Functions.get_all_data()
+tickers = st.selectbox("Select the stock symbol",data['Symbol'])
 df = pd.DataFrame()
 
 df = Functions.make_data(tickers, start_date, end_date)
@@ -60,10 +61,10 @@ for param in tqdm(pdq):
 # find lowest aic          
 index_min = min(range(len(aic)), key=aic.__getitem__)           
 
-print('The optimal model is: ARIMA{} -AIC{}'.format(parameters[index_min], aic[index_min]))
+# print('The optimal model is: ARIMA{} -AIC{}'.format(parameters[index_min], aic[index_min]))
 model = ARIMA(df, order=parameters[index_min])
 model_fit = model.fit()
-print(model_fit.summary())
+# print(model_fit.summary())
 y = model_fit.predict()
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=df.index,y=df['TCS'],
