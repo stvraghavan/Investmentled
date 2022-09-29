@@ -24,19 +24,8 @@ tickers = st.selectbox("Select the stock symbol",data['Symbol'])
 df = pd.DataFrame()
 
 df = Functions.make_data(tickers, start_date, end_date)
-# for i in range(len(tickers)):
-#     data = gh(symbol=tickers[i],start=start_date, end=(end_date))[['Symbol','Close']]
-#     data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
-#     data.drop(['Symbol'], axis=1,inplace=True)
-#     if i == 0:
-#         df = data
-#     if i != 0:
-#         df = df.join(data)
-
 df.index = pd.to_datetime(df.index)
 df.sort_index(inplace=True)
-
-#print(df.index)
 
 # Define the p, d and q parameters to take any value between 0 and 3
 p = d = q = range(0, 3)
@@ -65,7 +54,7 @@ index_min = min(range(len(aic)), key=aic.__getitem__)
 model = ARIMA(df, order=parameters[index_min])
 model_fit = model.fit()
 # print(model_fit.summary())
-y = model_fit.predict()
+y = model_fit.predict(start=len(df),end=len(df)+30)
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=df.index,y=df['TCS'],
             mode = 'lines',
