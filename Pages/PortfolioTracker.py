@@ -4,7 +4,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import seaborn as sb
-from datetime import date, timedelta
+from datetime import date
 from nsepy import get_history as gh
 plt.style.use('fivethirtyeight') #setting matplotlib style
 
@@ -13,8 +13,6 @@ from pypfopt import  risk_models
 from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
-import Functions
-
 st.title("Stockfolio💲💲💲")
 
 tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
@@ -22,27 +20,19 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
+        NSE_data = pd.read_csv("F:\jupyter\Stockfolio-main\EQUITY_L.csv")
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
-    with st.expander("Top Performing Stocks"):
-        start_date = date.today() - timedelta(days=180)
-        end_date = date.today()
-        stocks = Functions.get_data()
-        sym = stocks['Symbol']
-        sym = list(sym)
-        dataframe = Functions.make_data(sym,startdate=start_date,end_date=end_date)
-        avg_ret = Functions.daily_simple_return(dataframe)
-        st.write(avg_ret.sort_values(ascending=False).head())
-
         
-    user_data = st.multiselect("Enter the stock symbols you want",NSE_data['SYMBOL'])
-    stocksymbols = user_data
+    user_data = st.text_input("Enter the stock symbols you want",placeholder="Please seperate the stocks with a comma (,)")
+    tickers = user_data.split(",")
+    stocksymbols = tickers
     #stocksymbols = ['IRCTC']
-    startdate = date.today() - timedelta(days=180)
+    startdate = date(2019,10,14)
     end_date = date.today()
     #st.write(end_date)
     st.write(f"You have {len(stocksymbols)} assets in your porfolio" )
+    
 
     df = pd.DataFrame()
     for i in range(len(stocksymbols)):
@@ -55,23 +45,24 @@ with tab1:
             df = df.join(data)
     #df
 
-    # '''fig, ax = plt.subplots(figsize=(15,8))
-    # for i in df.columns.values :
-    #     ax.plot(df[i], label = i)
-    # ax.set_title("Portfolio Close Price History")
-    # ax.set_xlabel('Date', fontsize=18)
-    # ax.set_ylabel('Close Price INR (Rs)' , fontsize=18)
-    # ax.legend(df.columns.values , loc = 'upper left')
-    # st.pyplot(fig)
+    fig, ax = plt.subplots(figsize=(15,8))
+    for i in df.columns.values :
+        ax.plot(df[i], label = i)
+    ax.set_title("Portfolio Close Price History")
+    ax.set_xlabel('Date', fontsize=18)
+    ax.set_ylabel('Close Price INR (Rs)' , fontsize=18)
+    ax.legend(df.columns.values , loc = 'upper left')
+    st.pyplot(fig)
+    ## st.write("The plot shows the History of closing price(INR) of stocks") 
 
-    # correlation_matrix = df.corr(method='pearson')
-    # #correlation_matrix
+    correlation_matrix = df.corr(method='pearson')
+    #correlation_matrix
 
-    # fig1 = plt.figure()
-    # sb.heatmap(correlation_matrix,xticklabels=correlation_matrix.columns, yticklabels=correlation_matrix.columns,
-    # cmap='YlGnBu', annot=True, linewidth=0.5)
-    # st.write('Correlation between Stocks in your portfolio')
-    # st.pyplot(fig1)'''
+    fig1 = plt.figure()
+    sb.heatmap(correlation_matrix,xticklabels=correlation_matrix.columns, yticklabels=correlation_matrix.columns,
+    cmap='YlGnBu', annot=True, linewidth=0.5)
+    st.write('Correlation between Stocks in your portfolio')
+    st.pyplot(fig1)
 
     daily_simple_return = df.pct_change(1)
     daily_simple_return.dropna(inplace=True)
@@ -90,6 +81,11 @@ with tab1:
     ax.set_xlabel('Date')
     ax.set_ylabel('Daily simple returns')
     st.pyplot(fig)
+    ## st.write("The figure depicts the volatility in Daily Simple returns of stocks produced at end of the day")
+    ## with st.expander("Volatility")
+    ## st.write("liability to change rapidly and unpredictably, especially for the worse.")
+    ## st.write("If the price of a stock fluctuates rapidly in a short period, hitting new highs and lows, it is said to have high volatility.") 
+    ## st.write("If the stock price moves higher or lower more slowly, or stays relatively stable, it is said to have low volatility.")
 
     st.write('Average Daily returns(%) of stocks in your portfolio')
     Avg_daily = daily_simple_return.mean()
@@ -108,6 +104,8 @@ with tab1:
     #visualize the daily cummulative simple return
     st.write('Cummulative Returns')
     fig, ax = plt.subplots(figsize=(18,8))
+    ## st.write("This plot visualize the stocks based on their daily cummulative simple returns")
+    
 
     for i in daily_cummulative_simple_return.columns.values :
         ax.plot(daily_cummulative_simple_return[i], lw =2 ,label = i)
@@ -117,7 +115,8 @@ with tab1:
     ax.set_xlabel('Date')
     ax.set_ylabel('Growth of ₨ 1 investment')
     st.pyplot(fig)
-
+    ## st.write(The above plot depicts the ratio/variation between the Date & Growth of Rs1 investment")
+    
 with tab2:
 
     mean = expected_returns.mean_historical_return(df)
@@ -125,12 +124,12 @@ with tab2:
     S = risk_models.sample_cov(df) # for sample covariance matrix
     #S
 
-    # plt.style.use('ggplot')
-    # fig = plt.figure()
-    # sb.heatmap(S,xticklabels=S.columns, yticklabels=S.columns,
-    # cmap='RdBu_r', annot=True, linewidth=0.5)
-    # st.write('Covariance between daily simple returns of stocks in your portfolio')
-    # st.pyplot(fig)
+    plt.style.use('ggplot')
+    fig = plt.figure()
+    sb.heatmap(S,xticklabels=S.columns, yticklabels=S.columns,
+    cmap='RdBu_r', annot=True, linewidth=0.5)
+    st.write('Covariance between daily simple returns of stocks in your portfolio')
+    st.pyplot(fig)
 
     ef = EfficientFrontier(mean,S)
     weights = ef.max_sharpe() #for maximizing the Sharpe ratio #Optimization
