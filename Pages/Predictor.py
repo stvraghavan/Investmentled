@@ -55,7 +55,11 @@ index_min = min(range(len(aic)), key=aic.__getitem__)
 model = ARIMA(df, order=parameters[index_min])
 model_fit = model.fit()
 # print(model_fit.summary())
+<<<<<<< HEAD
 y = model_fit.predict(start=1825,end=1855)
+=======
+y = model_fit.predict(start=len(df),end=len(df)+30)
+>>>>>>> 3087d8d2875028fe82d077c2f8888074ceb653b8
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=df.index,y=df['TCS'],
             mode = 'lines',
