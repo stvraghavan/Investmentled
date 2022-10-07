@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 from nsepy import get_history as gh
 from tqdm import tqdm
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as plt
+import streamlit as st
 
 def get_50data():
     symbols = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/ind_nifty50list.csv")
@@ -29,7 +32,20 @@ def make_data(stocksymbols,startdate,end_date):
 def daily_simple_return(data_frame):
     dsr = data_frame.pct_change(1)
     dsr.dropna(inplace=True)
-    Avg_daily = dsr.mean().rename('Average Return')
-    Avg_daily = Avg_daily*100
     # Avg_daily = list(Avg_daily)
+    return dsr
+
+def daily_simple_return_percent(data_frame):
+    Avg_daily = data_frame.mean().rename('Average Return')
+    Avg_daily = Avg_daily*100
     return Avg_daily
+
+def word_cloud(text):
+        stopwords = set(STOPWORDS)
+        allWords = ' '.join([nws for nws in text])
+        wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
+        fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
+        plt.imshow(wordCloud)
+        ax.axis("off")
+        fig.tight_layout(pad=0)
+        st.pyplot(fig)

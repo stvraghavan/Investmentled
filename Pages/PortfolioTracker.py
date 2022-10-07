@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sb
 from datetime import date, timedelta
 from nsepy import get_history as gh
+import plotly.express as px
 plt.style.use('fivethirtyeight') #setting matplotlib style
 
 from pypfopt.efficient_frontier import EfficientFrontier
@@ -22,115 +23,78 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("C:/Users/Tilak/Documents/Stockfolio/EQUITY_L.csv")
+        NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
-        st.write(NSE_data[['NAME OF COMPANY','SYMBOL']])
+        st.write(NSE_data[['NAME OF COMPANY','Symbol']])
     with st.expander("Top Performing Stocks"):
         start_date = date.today() - timedelta(days=180)
         end_date = date.today()
-        stocks = Functions.get_data()
+        stocks = Functions.get_50data()
         sym = stocks['Symbol']
         sym = list(sym)
         dataframe = Functions.make_data(sym,startdate=start_date,end_date=end_date)
-        avg_ret = Functions.daily_simple_return(dataframe)
+        avg_ret = Functions.daily_simple_return_percent(Functions.daily_simple_return(dataframe))
         st.write(avg_ret.sort_values(ascending=False).head())
 
         
-    user_data = st.multiselect("Enter the stock symbols you want",NSE_data['SYMBOL'])
+    user_data = st.multiselect("Enter the stock symbols you want",NSE_data['Symbol'])
     stocksymbols = user_data
     #stocksymbols = ['IRCTC']
     startdate = date.today() - timedelta(days=180)
     end_date = date.today()
     #st.write(end_date)
-    st.write(f"You have {len(stocksymbols)} assets in your porfolio" )
+    st.write(f"You have selected {len(stocksymbols)} stocks" )
 
     df = pd.DataFrame()
-    for i in range(len(stocksymbols)):
-        data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
-        data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
-        data.drop(['Symbol'], axis=1,inplace=True)
-        if i == 0:
-            df = data
-        if i != 0:
-            df = df.join(data)
-    #df
 
-    # '''fig, ax = plt.subplots(figsize=(15,8))
-    # for i in df.columns.values :
-    #     ax.plot(df[i], label = i)
-    # ax.set_title("Portfolio Close Price History")
-    # ax.set_xlabel('Date', fontsize=18)
-    # ax.set_ylabel('Close Price INR (Rs)' , fontsize=18)
-    # ax.legend(df.columns.values , loc = 'upper left')
-    # st.pyplot(fig)
+    df = Functions.make_data(stocksymbols, startdate, end_date)
 
-    # correlation_matrix = df.corr(method='pearson')
-    # #correlation_matrix
+    daily_simple_return = Functions.daily_simple_return(df)
 
-    # fig1 = plt.figure()
-    # sb.heatmap(correlation_matrix,xticklabels=correlation_matrix.columns, yticklabels=correlation_matrix.columns,
-    # cmap='YlGnBu', annot=True, linewidth=0.5)
-    # st.write('Correlation between Stocks in your portfolio')
-    # st.pyplot(fig1)'''
+    st.write('# Daily simple returns')
 
-    daily_simple_return = df.pct_change(1)
-    daily_simple_return.dropna(inplace=True)
-    #daily_simple_return
-
-    st.write('Daily simple returns')
-    fig, ax = plt.subplots(figsize=(15,8))
-
-
-    for i in daily_simple_return.columns.values :
-        ax.plot(daily_simple_return[i], lw =2 ,label = i)
-
-
-    ax.legend( loc = 'upper right' , fontsize =10)
-    ax.set_title('Volatility in Daily simple returns ')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Daily simple returns')
-    st.pyplot(fig)
+    fig = px.line(daily_simple_return,title="Volatility in Daily simple returns")
+    fig.update_layout(legend_title_text="Stocks")
+    fig.update_xaxes(title_text="Date")
+    fig.update_yaxes(title_text="Daily Simple Returns")
+    st.plotly_chart(fig)
 
     st.write('Average Daily returns(%) of stocks in your portfolio')
     Avg_daily = daily_simple_return.mean()
-    st.write(Avg_daily*100)
+    st.write((Avg_daily*100).rename("Average Daily return (in %)"))
 
     daily_simple_return.plot(kind = "box",figsize = (20,10), title = "Risk Box Plot")
 
     st.write('Annualized Standard Deviation (Volatality(%), 252 trading days) of individual stocks in your portfolio on the basis of daily simple returns.')
-    st.write(daily_simple_return.std() * np.sqrt(252) * 100)
+    st.write((daily_simple_return.std() * np.sqrt(252) * 100).rename("Volatility"))
 
-    Avg_daily / (daily_simple_return.std() * np.sqrt(252)) *100
+    st.write((Avg_daily / (daily_simple_return.std() * np.sqrt(252)) *100).rename("Earning per unit risk"))
 
-    daily_cummulative_simple_return =(daily_simple_return+1).cumprod()
-    #daily_cummulative_simple_return
+    daily_cummulative_simple_return = (daily_simple_return+1).cumprod()
 
     #visualize the daily cummulative simple return
     st.write('Cummulative Returns')
     fig, ax = plt.subplots(figsize=(18,8))
 
-    for i in daily_cummulative_simple_return.columns.values :
-        ax.plot(daily_cummulative_simple_return[i], lw =2 ,label = i)
-
-    ax.legend( loc = 'upper left' , fontsize =10)
-    ax.set_title('Daily Cummulative Simple returns/growth of investment')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Growth of ₨ 1 investment')
-    st.pyplot(fig)
+    fig = px.line(daily_cummulative_simple_return,title="Daily Cummulative Simple returns/growth of investment")
+    fig.update_layout(legend_title_text="Stocks")
+    fig.update_xaxes(title_text="Date")
+    fig.update_yaxes(title_text="Growth of Rs 1 investment")
+    st.plotly_chart(fig)
 
 with tab2:
 
     mean = expected_returns.mean_historical_return(df)
 
     S = risk_models.sample_cov(df) # for sample covariance matrix
-    #S
 
     # plt.style.use('ggplot')
-    # fig = plt.figure()
+    fig = px.imshow(S,text_auto=True)
+
     # sb.heatmap(S,xticklabels=S.columns, yticklabels=S.columns,
     # cmap='RdBu_r', annot=True, linewidth=0.5)
-    # st.write('Covariance between daily simple returns of stocks in your portfolio')
-    # st.pyplot(fig)
+    st.write('Covariance between daily simple returns of stocks in your portfolio')
+    st.plotly_chart(fig)
 
     ef = EfficientFrontier(mean,S)
     weights = ef.max_sharpe() #for maximizing the Sharpe ratio #Optimization
@@ -139,10 +103,10 @@ with tab2:
     labels = list(cleaned_weights.keys())
     # Get the Values and store them in a list
     values = list(cleaned_weights.values())
-    fig, ax = plt.subplots()
-    ax.pie(values, labels=labels, autopct='%1.0f%%')
+    # fig, ax = plt.subplots()
+    fig = px.pie(values=values,names=labels)
     st.write('Portfolio Allocation')
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
     #st.write(ef.portfolio_performance(verbose=True))
     portfolio_perf = ef.portfolio_performance()
@@ -151,7 +115,7 @@ with tab2:
     st.write("The Annual Volatility is ",round(portfolio_perf[1]*100,2),"%")
     st.write("Sharpe Ratio is ",round(portfolio_perf[2],2))
 
-    portfolio_amount = float(st.text_input("Enter the amount you want to invest: "))
+    portfolio_amount = st.number_input("Enter the amount you want to invest: ")
     if portfolio_amount != '' :
         # Get discrete allocation of each share per stock
 

@@ -12,6 +12,7 @@ import numpy as np
 import re
 import snscrape.modules.twitter as sntwitter
 import plotly.express as px
+import Functions
 
 nltk.download('vader_lexicon') #required for Sentiment Analysis
 
@@ -43,7 +44,7 @@ with tab1:
         result = googlenews.result()
         #store the results
         df = pd.DataFrame(result)
-        st.write(df)
+        # st.write(df)
 
     try:
         list =[] #creating an empty list 
@@ -68,7 +69,7 @@ with tab1:
         # print(check_empty)
         if check_empty == False:
             news_df=pd.DataFrame(list) #creating dataframe
-            st.write(news_df)
+            # st.write(news_df)
 
     except Exception as e:
         #exception handling
@@ -135,18 +136,18 @@ with tab1:
     st.plotly_chart(fig)
 
     # Word cloud visualization
-    def word_cloud(text):
-        stopwords = set(STOPWORDS)
-        allWords = ' '.join([nws for nws in text])
-        wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
-        fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
-        plt.imshow(wordCloud)
-        ax.axis("off")
-        fig.tight_layout(pad=0)
-        st.pyplot(fig)
+    # def word_cloud(text):
+    #     stopwords = set(STOPWORDS)
+    #     allWords = ' '.join([nws for nws in text])
+    #     wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
+    #     fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
+    #     plt.imshow(wordCloud)
+    #     ax.axis("off")
+    #     fig.tight_layout(pad=0)
+    #     st.pyplot(fig)
 
     st.write('Wordcloud for ' + company_name)
-    word_cloud(news_df['Summary'].values)
+    Functions.word_cloud(news_df['Summary'].values)
 
 with tab2:
     #Get user input
@@ -172,7 +173,7 @@ with tab2:
                     #Creating a dataframe from the tweets list above 
                     df = pd.DataFrame(tweets_list, columns=['Datetime', 'Tweet Id', 'Text', 'Username'])
 
-                    st.write(df)
+                    # st.write(df)
 
     # Create a function to clean the tweets
     def cleanTxt(text):
@@ -248,15 +249,15 @@ with tab2:
     
 
     # word cloud visualization
-    def word_cloud(text):
-        stopwords = set(STOPWORDS)
-        allWords = ' '.join([twts for twts in text])
-        wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
-        fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
-        plt.imshow(wordCloud)
-        ax.axis("off")
-        fig.tight_layout(pad=0)
-        st.pyplot(fig)
+    # def word_cloud(text):
+    #     stopwords = set(STOPWORDS)
+    #     allWords = ' '.join([twts for twts in text])
+    #     wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
+    #     fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
+    #     plt.imshow(wordCloud)
+    #     ax.axis("off")
+    #     fig.tight_layout(pad=0)
+    #     st.pyplot(fig)
 
     st.write('Wordcloud for ' + query)
-    word_cloud(df['Text'].values)
+    Functions.word_cloud(df['Text'].values)
