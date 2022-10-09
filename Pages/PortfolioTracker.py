@@ -14,7 +14,7 @@ from pypfopt import  risk_models
 from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
-import Functions
+from Functions import make_data,get_50data,get_all_data,word_cloud,daily_simple_return,daily_simple_return_percent
 
 st.title("Stockfolio💲💲💲")
 
@@ -29,11 +29,11 @@ with tab1:
     with st.expander("Top Performing Stocks"):
         start_date = date.today() - timedelta(days=180)
         end_date = date.today()
-        stocks = Functions.get_50data()
+        stocks = get_50data()
         sym = stocks['Symbol']
         sym = list(sym)
-        dataframe = Functions.make_data(sym,startdate=start_date,end_date=end_date)
-        avg_ret = Functions.daily_simple_return_percent(Functions.daily_simple_return(dataframe))
+        dataframe = make_data(sym,startdate=start_date,end_date=end_date)
+        avg_ret = daily_simple_return_percent(daily_simple_return(dataframe))
         st.write(avg_ret.sort_values(ascending=False).head())
 
         
@@ -47,9 +47,9 @@ with tab1:
 
     df = pd.DataFrame()
 
-    df = Functions.make_data(stocksymbols, startdate, end_date)
+    df = make_data(stocksymbols, startdate, end_date)
 
-    daily_simple_return = Functions.daily_simple_return(df)
+    daily_simple_return = daily_simple_return(df)
 
     st.write('# Daily simple returns')
 
@@ -63,7 +63,9 @@ with tab1:
     Avg_daily = daily_simple_return.mean()
     st.write((Avg_daily*100).rename("Average Daily return (in %)"))
 
-    daily_simple_return.plot(kind = "box",figsize = (20,10), title = "Risk Box Plot")
+    labels = daily_simple_return.columns
+    fig = px.box(daily_simple_return,title = "Risk Box Plot")
+    st.plotly_chart(fig)
 
     st.write('Annualized Standard Deviation (Volatality(%), 252 trading days) of individual stocks in your portfolio on the basis of daily simple returns.')
     st.write((daily_simple_return.std() * np.sqrt(252) * 100).rename("Volatility"))
@@ -115,7 +117,7 @@ with tab2:
     st.write("The Annual Volatility is ",round(portfolio_perf[1]*100,2),"%")
     st.write("Sharpe Ratio is ",round(portfolio_perf[2],2))
 
-    portfolio_amount = st.number_input("Enter the amount you want to invest: ")
+    portfolio_amount = st.number_input("Enter the amount you want to invest: ",value=10000)
     if portfolio_amount != '' :
         # Get discrete allocation of each share per stock
 

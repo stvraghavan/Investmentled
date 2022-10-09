@@ -49,3 +49,29 @@ def word_cloud(text):
         ax.axis("off")
         fig.tight_layout(pad=0)
         st.pyplot(fig)
+
+code_make_data = '''def make_data(stocksymbols,startdate,end_date):
+    data_frame = pd.DataFrame()
+    for i in tqdm(range(len(stocksymbols))):
+        try:
+            data = gh(symbol=stocksymbols[i],start=startdate, end=(end_date))[['Symbol','Close']]
+            data.rename(columns={'Close':data['Symbol'][0]},inplace=True)
+            data.drop(['Symbol'], axis=1,inplace=True)
+            if i == 0:
+                data_frame = data
+            if i != 0:
+                data_frame = data_frame.join(data)
+        except:
+            pass
+    return data_frame'''
+code_daily_simple_return ='''def daily_simple_return(data_frame):
+    dsr = data_frame.pct_change(1)
+    dsr.dropna(inplace=True)
+    return dsr'''
+code_daily_simple_return_percent = '''def daily_simple_return_percent(data_frame):
+    Avg_daily = data_frame.mean().rename('Average Return')
+    Avg_daily = Avg_daily*100
+    return Avg_daily'''
+st.code(code_make_data,language="python")
+st.code(code_daily_simple_return,language="python")
+st.code(code_daily_simple_return_percent,language="python")
