@@ -90,56 +90,58 @@ with tab1:
     negative_list = []
     positive_list = []
 
+    try:
     #Iterating over the tweets in the dataframe
-    for news in news_df['Summary']:
-        news_list.append(news)
-        analyzer = SentimentIntensityAnalyzer().polarity_scores(news)
-        neg = analyzer['neg']
-        neu = analyzer['neu']
-        pos = analyzer['pos']
-        comp = analyzer['compound']
+        for news in news_df['Summary']:
+            news_list.append(news)
+            analyzer = SentimentIntensityAnalyzer().polarity_scores(news)
+            neg = analyzer['neg']
+            neu = analyzer['neu']
+            pos = analyzer['pos']
+            comp = analyzer['compound']
 
-        if neg > pos:
-            negative_list.append(news) #appending the news that satisfies this condition
-            negative += 1 #increasing the count by 1
-        elif pos > neg:
-            positive_list.append(news) #appending the news that satisfies this condition
-            positive += 1 #increasing the count by 1
-        elif pos == neg:
-            neutral_list.append(news) #appending the news that satisfies this condition
-            neutral += 1 #increasing the count by 1 
+            if neg > pos:
+                negative_list.append(news) #appending the news that satisfies this condition
+                negative += 1 #increasing the count by 1
+            elif pos > neg:
+                positive_list.append(news) #appending the news that satisfies this condition
+                positive += 1 #increasing the count by 1
+            elif pos == neg:
+                neutral_list.append(news) #appending the news that satisfies this condition
+                neutral += 1 #increasing the count by 1 
 
-    positive = percentage(positive, len(news_df)) #percentage is the function defined above
-    negative = percentage(negative, len(news_df))
-    neutral = percentage(neutral, len(news_df))
+        positive = percentage(positive, len(news_df)) #percentage is the function defined above
+        negative = percentage(negative, len(news_df))
+        neutral = percentage(neutral, len(news_df))
 
-    #Converting lists to pandas dataframe
-    news_list = pd.DataFrame(news_list)
-    neutral_list = pd.DataFrame(neutral_list)
-    negative_list = pd.DataFrame(negative_list)
-    positive_list = pd.DataFrame(positive_list)
-    #using len(length) function for counting
-    st.write("Positive Sentiment:", '%.2f' % len(positive_list), end='\n')
-    st.write("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n')
-    st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n')
+        #Converting lists to pandas dataframe
+        news_list = pd.DataFrame(news_list)
+        neutral_list = pd.DataFrame(neutral_list)
+        negative_list = pd.DataFrame(negative_list)
+        positive_list = pd.DataFrame(positive_list)
+        #using len(length) function for counting
+        st.write("Positive Sentiment:", '%.2f' % len(positive_list), end='\n')
+        st.write("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n')
+        st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n')
 
-    #Creating PieCart
-    labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
-    sizes = [positive, neutral, negative]
-    colors = ['yellowgreen', 'blue','red']
-    fig = px.pie(sizes,values=sizes,names=labels,color=labels,
-                color_discrete_map={
-                    'Positive ['+str(round(positive))+'%]':'green',
-                    'Neutral ['+str(round(neutral))+'%]':'blue',
-                    'Negative ['+str(round(negative))+'%]':'red'
-                },title="Sentiment Analyser for company "+company_name+" from news")
-    st.plotly_chart(fig)
+        #Creating PieCart
+        labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
+        sizes = [positive, neutral, negative]
+        colors = ['yellowgreen', 'blue','red']
+        fig = px.pie(sizes,values=sizes,names=labels,color=labels,
+                    color_discrete_map={
+                        'Positive ['+str(round(positive))+'%]':'green',
+                        'Neutral ['+str(round(neutral))+'%]':'blue',
+                        'Negative ['+str(round(negative))+'%]':'red'
+                    },title="Sentiment Analyser for company "+company_name+" from news")
+        st.plotly_chart(fig)
 
-    st.write('Wordcloud for ' + company_name)
-    Functions.word_cloud(news_df['Summary'].values)
-    with st.expander("What is this ?"):
-        st.write("A wordcloud is a tool used to represent the frequency of occurance of a certain word in the text or content being analysed")
-
+        st.write('Wordcloud for ' + company_name)
+        Functions.word_cloud(news_df['Summary'].values)
+        with st.expander("What is this ?"):
+            st.write("A wordcloud is a tool used to represent the frequency of occurance of a certain word in the text or content being analysed")
+    except:
+        pass
 with tab2:
     #Get user input
     query = company_name
@@ -173,71 +175,73 @@ with tab2:
         text = re.sub('RT[\s]+', '', text) # Removing RT
         text = re.sub('https?:\/\/\S+', '', text) # Removing hyperlink
         return text
-
+    try:
     #applying this function to Text column of our dataframe
-    df["Text"] = df["Text"].apply(cleanTxt)
+        df["Text"] = df["Text"].apply(cleanTxt)
 
-    #Sentiment Analysis
-    def percentage(part,whole):
-        return 100 * float(part)/float(whole)
+        #Sentiment Analysis
+        def percentage(part,whole):
+            return 100 * float(part)/float(whole)
 
-    #Assigning Initial Values
-    positive = 0
-    negative = 0
-    neutral = 0
-    #Creating empty lists
-    tweet_list1 = []
-    neutral_list = []
-    negative_list = []
-    positive_list = []
+        #Assigning Initial Values
+        positive = 0
+        negative = 0
+        neutral = 0
+        #Creating empty lists
+        tweet_list1 = []
+        neutral_list = []
+        negative_list = []
+        positive_list = []
 
-    #Iterating over the tweets in the dataframe
-    for tweet in df['Text']:
-        tweet_list1.append(tweet)
-        analyzer = SentimentIntensityAnalyzer().polarity_scores(tweet)
-        neg = analyzer['neg']
-        neu = analyzer['neu']
-        pos = analyzer['pos']
-        comp = analyzer['compound']
+        #Iterating over the tweets in the dataframe
+        for tweet in df['Text']:
+            tweet_list1.append(tweet)
+            analyzer = SentimentIntensityAnalyzer().polarity_scores(tweet)
+            neg = analyzer['neg']
+            neu = analyzer['neu']
+            pos = analyzer['pos']
+            comp = analyzer['compound']
 
-        if neg > pos:
-            negative_list.append(tweet) #appending the tweet that satisfies this condition
-            negative += 1 #increasing the count by 1
-        elif pos > neg:
-            positive_list.append(tweet) #appending the tweet that satisfies this condition
-            positive += 1 #increasing the count by 1
-        elif pos == neg:
-            neutral_list.append(tweet) #appending the tweet that satisfies this condition
-            neutral += 1 #increasing the count by 1 
+            if neg > pos:
+                negative_list.append(tweet) #appending the tweet that satisfies this condition
+                negative += 1 #increasing the count by 1
+            elif pos > neg:
+                positive_list.append(tweet) #appending the tweet that satisfies this condition
+                positive += 1 #increasing the count by 1
+            elif pos == neg:
+                neutral_list.append(tweet) #appending the tweet that satisfies this condition
+                neutral += 1 #increasing the count by 1 
 
-    positive = percentage(positive, len(df)) #percentage is the function defined above
-    negative = percentage(negative, len(df))
-    neutral = percentage(neutral, len(df))
+        positive = percentage(positive, len(df)) #percentage is the function defined above
+        negative = percentage(negative, len(df))
+        neutral = percentage(neutral, len(df))
 
-    #Converting lists to pandas dataframe
-    tweet_list1 = pd.DataFrame(tweet_list1)
-    neutral_list = pd.DataFrame(neutral_list)
-    negative_list = pd.DataFrame(negative_list)
-    positive_list = pd.DataFrame(positive_list)
-    #using len(length) function for counting
-    st.write("Since " + noOfDays + " days, there have been", len(tweet_list1) ,  "tweets on " + query, end='\n*')
-    st.write("Positive Sentiment:", '%.2f' % len(positive_list), end='\n*')
-    st.write("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n*')
-    st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n*')
+        #Converting lists to pandas dataframe
+        tweet_list1 = pd.DataFrame(tweet_list1)
+        neutral_list = pd.DataFrame(neutral_list)
+        negative_list = pd.DataFrame(negative_list)
+        positive_list = pd.DataFrame(positive_list)
+        #using len(length) function for counting
+        st.write("Since " + noOfDays + " days, there have been", len(tweet_list1) ,  "tweets on " + query, end='\n*')
+        st.write("Positive Sentiment:", '%.2f' % len(positive_list), end='\n*')
+        st.write("Neutral Sentiment:", '%.2f' % len(neutral_list), end='\n*')
+        st.write("Negative Sentiment:", '%.2f' % len(negative_list), end='\n*')
 
-    #Creating PieCart**
+        #Creating PieCart**
 
-    labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
-    sizes = [positive, neutral, negative]
-    colors = ['yellowgreen', 'blue','red']
-    fig = px.pie(sizes,values=sizes,names=labels,color=labels,
-                color_discrete_map={
-                    'Positive ['+str(round(positive))+'%]':'green',
-                    'Neutral ['+str(round(neutral))+'%]':'blue',
-                    'Negative ['+str(round(negative))+'%]':'red'
-                },title="Sentiment Analysis for company "+query+" from twitter")
-    st.plotly_chart(fig)
-    st.write('Wordcloud for ' + query)
-    Functions.word_cloud(df['Text'].values)
-    with st.expander("What is this ?"):
-        st.write("A wordcloud is a tool used to represent the frequency of occurance of a certain word in the text or content being analysed")
+        labels = ['Positive ['+str(round(positive))+'%]' , 'Neutral ['+str(round(neutral))+'%]','Negative ['+str(round(negative))+'%]']
+        sizes = [positive, neutral, negative]
+        colors = ['yellowgreen', 'blue','red']
+        fig = px.pie(sizes,values=sizes,names=labels,color=labels,
+                    color_discrete_map={
+                        'Positive ['+str(round(positive))+'%]':'green',
+                        'Neutral ['+str(round(neutral))+'%]':'blue',
+                        'Negative ['+str(round(negative))+'%]':'red'
+                    },title="Sentiment Analysis for company "+query+" from twitter")
+        st.plotly_chart(fig)
+        st.write('Wordcloud for ' + query)
+        Functions.word_cloud(df['Text'].values)
+        with st.expander("What is this ?"):
+            st.write("A wordcloud is a tool used to represent the frequency of occurance of a certain word in the text or content being analysed")
+    except:
+        pass

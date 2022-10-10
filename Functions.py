@@ -40,9 +40,9 @@ def make_all_data(stocksymbols,startdate,end_date):
         data = gh(symbol=stocksymbols,start=startdate, end=(end_date))
         data.drop(['Symbol'], axis=1,inplace=True)
         data_frame = data
-        print("Successfully gathered data")
+        # print("Successfully gathered data")
     except:
-        print("Fail")
+        # print("Fail")
         pass
     return data_frame
 

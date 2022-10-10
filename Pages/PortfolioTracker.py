@@ -48,7 +48,8 @@ with tab1:
         import plotly.graph_objects as go
 
         tickers = st.selectbox("Select the stock",options=stocksymbols)
-        data = make_all_data(tickers,startdate=startdate,end_date=end_date)
+        st_date = st.date_input("Select a starting date")
+        data = make_all_data(tickers,startdate=st_date,end_date=end_date)
         data.index = pd.to_datetime(data.index)
         fig = go.Figure(data=[go.Candlestick(x=data.index,
                         open=data['Open'],
@@ -111,52 +112,53 @@ with tab2:
     st.plotly_chart(fig)
     with st.expander("A chart which descibes the relationship between the selected stocks"):
         st.write("Covariance is a statistical tool that is used to determine the relationship between the movements of two random variables. (Note: The covariance with the stock itself is know as variance)")
+    try:
+        ef = EfficientFrontier(mean,S)
+        weights = ef.max_sharpe() #for maximizing the Sharpe ratio #Optimization
+        cleaned_weights = ef.clean_weights() #to clean the raw weights
+        # Get the Keys and store them in a list
+        labels = list(cleaned_weights.keys())
+        # Get the Values and store them in a list
+        values = list(cleaned_weights.values())
+        fig = px.pie(values=values,names=labels)
+        st.write('Portfolio Allocation')
+        st.plotly_chart(fig)
+        with st.expander("A pie chart depicting the volume of selected stocks"):
+            st.write("This pie chart shows the percentage of stocks to hold on to from the list of stocks selected.")
 
-    ef = EfficientFrontier(mean,S)
-    weights = ef.max_sharpe() #for maximizing the Sharpe ratio #Optimization
-    cleaned_weights = ef.clean_weights() #to clean the raw weights
-    # Get the Keys and store them in a list
-    labels = list(cleaned_weights.keys())
-    # Get the Values and store them in a list
-    values = list(cleaned_weights.values())
-    fig = px.pie(values=values,names=labels)
-    st.write('Portfolio Allocation')
-    st.plotly_chart(fig)
-    with st.expander("A pie chart depicting the volume of selected stocks"):
-        st.write("This pie chart shows the percentage of stocks to hold on to from the list of stocks selected.")
+        #st.write(ef.portfolio_performance(verbose=True))
+        portfolio_perf = ef.portfolio_performance()
+        st.write("The portfolio's performance metrics are")
+        st.write("The portfolio's expected return is ",round(portfolio_perf[0]*100,2),"%")
+        st.write("The Annual Volatility is ",round(portfolio_perf[1]*100,2),"%")
+        st.write("Sharpe Ratio is ",round(portfolio_perf[2],2))
+        with st.expander("More info"):
+            st.write("The Sharpe ratio compares the return of an investment with its risk.")
+            st.write("Volatility is a statistical measure of the dispersion of returns for a given security or market index. In most cases, the higher the volatility, the riskier the security. Volatility is often measured from either the standard deviation or variance between returns from that same security or market index.")
+            st.write("The expected return is the profit or loss that an you anticipates")
 
-    #st.write(ef.portfolio_performance(verbose=True))
-    portfolio_perf = ef.portfolio_performance()
-    st.write("The portfolio's performance metrics are")
-    st.write("The portfolio's expected return is ",round(portfolio_perf[0]*100,2),"%")
-    st.write("The Annual Volatility is ",round(portfolio_perf[1]*100,2),"%")
-    st.write("Sharpe Ratio is ",round(portfolio_perf[2],2))
-    with st.expander("More info"):
-        st.write("The Sharpe ratio compares the return of an investment with its risk.")
-        st.write("Volatility is a statistical measure of the dispersion of returns for a given security or market index. In most cases, the higher the volatility, the riskier the security. Volatility is often measured from either the standard deviation or variance between returns from that same security or market index.")
-        st.write("The expected return is the profit or loss that an you anticipates")
+        portfolio_amount = st.number_input("Enter the amount you want to invest: ",value=10000)
+        if portfolio_amount != '' :
+            # Get discrete allocation of each share per stock
 
-    portfolio_amount = st.number_input("Enter the amount you want to invest: ",value=10000)
-    if portfolio_amount != '' :
-        # Get discrete allocation of each share per stock
+            latest_prices = get_latest_prices(df)
+            weights = cleaned_weights
+            discrete_allocation = DiscreteAllocation(weights, latest_prices , total_portfolio_value = int(portfolio_amount))
+            allocation , leftover = discrete_allocation.lp_portfolio()
 
-        latest_prices = get_latest_prices(df)
-        weights = cleaned_weights
-        discrete_allocation = DiscreteAllocation(weights, latest_prices , total_portfolio_value = int(portfolio_amount))
-        allocation , leftover = discrete_allocation.lp_portfolio()
-
-        discrete_allocation_list = []
-
-
-        for symbol in allocation:
-            discrete_allocation_list.append(allocation.get(symbol))
+            discrete_allocation_list = []
 
 
-        portfolio_df = pd.DataFrame(columns =['Ticker' , 'Number of stocks to buy'])
+            for symbol in allocation:
+                discrete_allocation_list.append(allocation.get(symbol))
 
-        portfolio_df['Ticker'] = allocation
-        portfolio_df['Number of stocks to buy'] = discrete_allocation_list
-        st.write('Number of stocks to buy with the amount of Rs ' + str(portfolio_amount))
-        st.write(portfolio_df)
-        st.write('Funds remaining with you will be: Rs' , int(leftover))
-    
+
+            portfolio_df = pd.DataFrame(columns =['Ticker' , 'Number of stocks to buy'])
+
+            portfolio_df['Ticker'] = allocation
+            portfolio_df['Number of stocks to buy'] = discrete_allocation_list
+            st.write('Number of stocks to buy with the amount of Rs ' + str(portfolio_amount))
+            st.write(portfolio_df)
+            st.write('Funds remaining with you will be: Rs' , int(leftover))
+    except:
+        pass
