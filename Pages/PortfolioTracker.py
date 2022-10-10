@@ -2,12 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-import matplotlib.pyplot as plt
-import seaborn as sb
 from datetime import date, timedelta
 from nsepy import get_history as gh
 import plotly.express as px
-plt.style.use('fivethirtyeight') #setting matplotlib style
 
 from pypfopt.efficient_frontier import EfficientFrontier
 from pypfopt import  risk_models
@@ -23,7 +20,7 @@ tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 with tab1:
     
     with st.expander("Stock Symbols"):
-        NSE_data = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
+        NSE_data = get_all_data()
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','Symbol']])
     with st.expander("Top Performing Stocks"):
@@ -51,13 +48,16 @@ with tab1:
 
     daily_simple_return = daily_simple_return(df)
 
-    st.write('# Daily simple returns')
+    st.write('Daily simple returns')
 
     fig = px.line(daily_simple_return,title="Volatility in Daily simple returns")
     fig.update_layout(legend_title_text="Stocks")
     fig.update_xaxes(title_text="Date")
     fig.update_yaxes(title_text="Daily Simple Returns")
     st.plotly_chart(fig)
+    with st.expander("This chart depicts the earnings from the previous day"):
+        st.write("Daily return is calculated by subtracting the opening price from the closing price.If you are calculating for a per-share gain, you simply multiply the result by your share amount. If you are calculating for percentages, you divide by the opening price, then multiply by 100.")
+
 
     st.write('Average Daily returns(%) of stocks in your portfolio')
     Avg_daily = daily_simple_return.mean()
@@ -66,6 +66,8 @@ with tab1:
     labels = daily_simple_return.columns
     fig = px.box(daily_simple_return,title = "Risk Box Plot")
     st.plotly_chart(fig)
+    with st.expander("A Box plot to show volatility"):
+        st.write("A box plot is a tool which shows the spread of data under study. This shows the central value, the extremes and their point of seperation")
 
     st.write('Annualized Standard Deviation (Volatality(%), 252 trading days) of individual stocks in your portfolio on the basis of daily simple returns.')
     st.write((daily_simple_return.std() * np.sqrt(252) * 100).rename("Volatility"))
@@ -76,7 +78,6 @@ with tab1:
 
     #visualize the daily cummulative simple return
     st.write('Cummulative Returns')
-    fig, ax = plt.subplots(figsize=(18,8))
 
     fig = px.line(daily_cummulative_simple_return,title="Daily Cummulative Simple returns/growth of investment")
     fig.update_layout(legend_title_text="Stocks")
@@ -84,19 +85,23 @@ with tab1:
     fig.update_yaxes(title_text="Growth of Rs 1 investment")
     st.plotly_chart(fig)
 
+    with st.expander("A chart which shows the cummulative gain seen across days"):
+        st.write("The cumulative return is the total change in the investment price over a set time—an aggregate return, not to be confused with annualized return.")
+
 with tab2:
 
     mean = expected_returns.mean_historical_return(df)
 
     S = risk_models.sample_cov(df) # for sample covariance matrix
 
-    # plt.style.use('ggplot')
     fig = px.imshow(S,text_auto=True)
 
     # sb.heatmap(S,xticklabels=S.columns, yticklabels=S.columns,
     # cmap='RdBu_r', annot=True, linewidth=0.5)
     st.write('Covariance between daily simple returns of stocks in your portfolio')
     st.plotly_chart(fig)
+    with st.expander("A chart which descibes the relationship between the selected stocks"):
+        st.write("Covariance is a statistical tool that is used to determine the relationship between the movements of two random variables. (Note: The covariance with the stock itself is know as variance)")
 
     ef = EfficientFrontier(mean,S)
     weights = ef.max_sharpe() #for maximizing the Sharpe ratio #Optimization
@@ -105,10 +110,11 @@ with tab2:
     labels = list(cleaned_weights.keys())
     # Get the Values and store them in a list
     values = list(cleaned_weights.values())
-    # fig, ax = plt.subplots()
     fig = px.pie(values=values,names=labels)
     st.write('Portfolio Allocation')
     st.plotly_chart(fig)
+    with st.expander("A pie chart depicting the volume of selected stocks"):
+        st.write("This pie chart shows the percentage of stocks to hold on to from the list of stocks selected.")
 
     #st.write(ef.portfolio_performance(verbose=True))
     portfolio_perf = ef.portfolio_performance()
@@ -116,6 +122,10 @@ with tab2:
     st.write("The portfolio's expected return is ",round(portfolio_perf[0]*100,2),"%")
     st.write("The Annual Volatility is ",round(portfolio_perf[1]*100,2),"%")
     st.write("Sharpe Ratio is ",round(portfolio_perf[2],2))
+    with st.expander("More info"):
+        st.write("The Sharpe ratio compares the return of an investment with its risk.")
+        st.write("Volatility is a statistical measure of the dispersion of returns for a given security or market index. In most cases, the higher the volatility, the riskier the security. Volatility is often measured from either the standard deviation or variance between returns from that same security or market index.")
+        st.write("The expected return is the profit or loss that an you anticipates")
 
     portfolio_amount = st.number_input("Enter the amount you want to invest: ",value=10000)
     if portfolio_amount != '' :

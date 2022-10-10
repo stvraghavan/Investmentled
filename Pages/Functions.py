@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 def get_50data():
-    symbols = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/ind_nifty50list.csv")
+    symbols = pd.read_csv("Data/ind_nifty50list.csv")
     return symbols
 
 def get_all_data():
-    symbols = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
+    symbols = pd.read_csv("Data/EQUITY_L.csv")
     return symbols
 
 def make_data(stocksymbols,startdate,end_date):
@@ -72,6 +72,9 @@ code_daily_simple_return_percent = '''def daily_simple_return_percent(data_frame
     Avg_daily = data_frame.mean().rename('Average Return')
     Avg_daily = Avg_daily*100
     return Avg_daily'''
+
+st.write("Greetings to users, this pages of the application aims to share the key components of code used in the development of this application.")
+
 st.code(code_make_data,language="python")
 st.code(code_daily_simple_return,language="python")
 st.code(code_daily_simple_return_percent,language="python")

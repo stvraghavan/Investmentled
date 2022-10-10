@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import datetime as dt
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -15,6 +14,7 @@ import plotly.express as px
 import Functions
 
 nltk.download('vader_lexicon') #required for Sentiment Analysis
+
 
 st.title("Stockfolio💲💲💲")
 
@@ -132,22 +132,13 @@ with tab1:
                     'Positive ['+str(round(positive))+'%]':'green',
                     'Neutral ['+str(round(neutral))+'%]':'blue',
                     'Negative ['+str(round(negative))+'%]':'red'
-                },title="Sentiment Analyser for company"+company_name+"")
+                },title="Sentiment Analyser for company "+company_name+" from news")
     st.plotly_chart(fig)
-
-    # Word cloud visualization
-    # def word_cloud(text):
-    #     stopwords = set(STOPWORDS)
-    #     allWords = ' '.join([nws for nws in text])
-    #     wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
-    #     fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
-    #     plt.imshow(wordCloud)
-    #     ax.axis("off")
-    #     fig.tight_layout(pad=0)
-    #     st.pyplot(fig)
 
     st.write('Wordcloud for ' + company_name)
     Functions.word_cloud(news_df['Summary'].values)
+    with st.expander("What is this ?"):
+        st.write("A wordcloud is a tool used to represent the frequency of occurance of a certain word in the text or content being analysed")
 
 with tab2:
     #Get user input
@@ -244,20 +235,9 @@ with tab2:
                     'Positive ['+str(round(positive))+'%]':'green',
                     'Neutral ['+str(round(neutral))+'%]':'blue',
                     'Negative ['+str(round(negative))+'%]':'red'
-                },title="Sentiment Analysis Result for keyword= "+query+"")
+                },title="Sentiment Analysis for company "+query+" from twitter")
     st.plotly_chart(fig)
-    
-
-    # word cloud visualization
-    # def word_cloud(text):
-    #     stopwords = set(STOPWORDS)
-    #     allWords = ' '.join([twts for twts in text])
-    #     wordCloud = WordCloud(background_color='black',width = 1600, height = 800,stopwords = stopwords,min_font_size = 20,max_font_size=150,colormap='prism').generate(allWords)
-    #     fig, ax = plt.subplots(figsize=(20,10), facecolor='k')
-    #     plt.imshow(wordCloud)
-    #     ax.axis("off")
-    #     fig.tight_layout(pad=0)
-    #     st.pyplot(fig)
-
     st.write('Wordcloud for ' + query)
     Functions.word_cloud(df['Text'].values)
+    with st.expander("What is this ?"):
+        st.write("A wordcloud is a tool used to represent the frequency of occurance of a certain word in the text or content being analysed")

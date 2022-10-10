@@ -36,11 +36,11 @@ with col2:
                 The stock market is a highly volatile entity affect by many people and people themselves are affect by social factors.
                 By Performing sentiment analysis we can capture some of the sentiments they express online to gain a small insight on how they might influence the market. 
                 """)
-        with st.expander("How do we give you future stock prices"):
-                st.write("""
-                We used a statistical model called Auto-Regressive Integrated Moving Average Model or ARIMA Model to estimate the future stock prices. 
-                The model was tested to provide maximum accuracy possible.
-                """)
+        # with st.expander("How do we give you future stock prices"):
+        #         st.write("""
+        #         We used a statistical model called Auto-Regressive Integrated Moving Average Model or ARIMA Model to estimate the future stock prices. 
+        #         The model was tested to provide maximum accuracy possible.
+        #         """)
 
 
 st.caption("Remember the analysis work done here is only for gaining information, we are in no way responsible for any money you gain / lose. Investment in stocks is subject to market risks please make sure to read all documents carefully")
