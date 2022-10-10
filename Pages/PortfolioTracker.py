@@ -1,3 +1,5 @@
+from matplotlib import ticker
+from prometheus_client import Metric
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -11,7 +13,7 @@ from pypfopt import  risk_models
 from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
-from Functions import make_data,get_50data,get_all_data,word_cloud,daily_simple_return,daily_simple_return_percent
+from Functions import make_data,get_50data,get_all_data,word_cloud,daily_simple_return,daily_simple_return_percent,get_metrics,make_all_data
 
 st.title("Stockfolio💲💲💲")
 
@@ -24,14 +26,8 @@ with tab1:
         NSE_data = NSE_data[NSE_data['SERIES'] == 'EQ']
         st.write(NSE_data[['NAME OF COMPANY','Symbol']])
     with st.expander("Top Performing Stocks"):
-        start_date = date.today() - timedelta(days=180)
-        end_date = date.today()
-        stocks = get_50data()
-        sym = stocks['Symbol']
-        sym = list(sym)
-        dataframe = make_data(sym,startdate=start_date,end_date=end_date)
-        avg_ret = daily_simple_return_percent(daily_simple_return(dataframe))
-        st.write(avg_ret.sort_values(ascending=False).head())
+        Metrics = get_metrics()
+        st.write(Metrics)
 
         
     user_data = st.multiselect("Enter the stock symbols you want",NSE_data['Symbol'])
@@ -47,6 +43,19 @@ with tab1:
     df = make_data(stocksymbols, startdate, end_date)
 
     daily_simple_return = daily_simple_return(df)
+
+    with st.expander("Candle Stick charts"):
+        import plotly.graph_objects as go
+
+        tickers = st.selectbox("Select the stock",options=stocksymbols)
+        data = make_all_data(tickers,startdate=startdate,end_date=end_date)
+        data.index = pd.to_datetime(data.index)
+        fig = go.Figure(data=[go.Candlestick(x=data.index,
+                        open=data['Open'],
+                        high=data['High'],
+                        low=data['Low'],
+                        close=data['Close'])])
+        st.plotly_chart(fig)
 
     st.write('Daily simple returns')
 

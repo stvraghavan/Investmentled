@@ -14,6 +14,10 @@ def get_all_data():
     symbols = pd.read_csv("Pages/Data/EQUITY_L.csv")
     return symbols
 
+def get_metrics():
+    metrics = pd.read_csv("Pages/Data/Metrics.csv",index_col=0)
+    return metrics
+
 def make_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
     for i in tqdm(range(len(stocksymbols))):
@@ -27,6 +31,19 @@ def make_data(stocksymbols,startdate,end_date):
                 data_frame = data_frame.join(data)
         except:
             pass
+    return data_frame
+
+def make_all_data(stocksymbols,startdate,end_date):
+    data_frame = pd.DataFrame()
+    try:
+        
+        data = gh(symbol=stocksymbols,start=startdate, end=(end_date))
+        data.drop(['Symbol'], axis=1,inplace=True)
+        data_frame = data
+        print("Successfully gathered data")
+    except:
+        print("Fail")
+        pass
     return data_frame
 
 def daily_simple_return(data_frame):
