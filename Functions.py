@@ -36,7 +36,6 @@ def make_data(stocksymbols,startdate,end_date):
 def make_all_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
     try:
-        
         data = gh(symbol=stocksymbols,start=startdate, end=(end_date))
         data.drop(['Symbol'], axis=1,inplace=True)
         data_frame = data

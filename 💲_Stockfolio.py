@@ -2,6 +2,8 @@
 
 import streamlit as st
 
+st.set_page_config(page_title="Stockfolio",page_icon="💲")
+
 st.title("Welcome to Stockfolio!! 💲💲💲")
 
 st.header('Stockfolio is your destination to finding insights about stocks.')

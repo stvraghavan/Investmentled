@@ -15,6 +15,8 @@ from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 
 from Functions import make_data,get_50data,get_all_data,word_cloud,daily_simple_return,daily_simple_return_percent,get_metrics,make_all_data
 
+st.set_page_config(page_title="Stock Tracker",page_icon="🎯")
+
 st.title("Stockfolio💲💲💲")
 
 tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
@@ -48,9 +50,13 @@ with tab1:
         import plotly.graph_objects as go
 
         tickers = st.selectbox("Select the stock",options=stocksymbols)
+        
         st_date = st.date_input("Select a starting date")
+        
         data = make_all_data(tickers,startdate=st_date,end_date=end_date)
+        
         data.index = pd.to_datetime(data.index)
+        
         fig = go.Figure(data=[go.Candlestick(x=data.index,
                         open=data['Open'],
                         high=data['High'],
