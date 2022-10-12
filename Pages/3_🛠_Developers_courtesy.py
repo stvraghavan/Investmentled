@@ -6,7 +6,7 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import streamlit as st
 
-st.set_page_config(page_title="Developer's Interest",page_icon="🛠")
+st.set_page_config(page_title="Developer's Courtesy",page_icon="🛠")
 
 def get_50data():
     symbols = pd.read_csv("Data/ind_nifty50list.csv")

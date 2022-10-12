@@ -57,12 +57,39 @@ with tab1:
         
         data.index = pd.to_datetime(data.index)
         
-        fig = go.Figure(data=[go.Candlestick(x=data.index,
+        HAdata = data[['Open','High','Low','Close']]
+        HAdata['Close'] = round(((data['Open'] + data['High'] + data['Low'] + data['Close'])/4),2)
+        for i in range(len(data)):
+            if i == 0:
+                HAdata.iat[0,0] = round(((data['Open'].iloc[0] + data['Close'].iloc[0])/2),2)
+            else:
+                HAdata.iat[i,0] = round(((HAdata.iat[i-1,0] + HAdata.iat[i-1,3])/2),2)
+        HAdata['High'] = HAdata.loc[:,['Open', 'Close']].join(data['High']).max(axis=1)
+        HAdata['Low'] = HAdata.loc[:,['Open', 'Close']].join(data['Low']).min(axis=1)
+
+        HAdata.index = pd.to_datetime(HAdata.index)
+
+        cdl = st.radio(
+            "Select a candle chart type",
+            ('Normal','Heikin-Ashi'))
+        if (cdl == 'Normal'):
+            fig = go.Figure(data=[go.Candlestick(x=data.index,
                         open=data['Open'],
                         high=data['High'],
                         low=data['Low'],
                         close=data['Close'])])
-        st.plotly_chart(fig)
+            st.plotly_chart(fig)
+        else:
+            fig = go.Figure(data=[go.Candlestick(x=data.index,
+                        open=HAdata.Open,
+                        high=HAdata.High,
+                        low=HAdata.Low,
+                        close=HAdata.Close)])
+            st.plotly_chart(fig)
+
+
+
+        
 
     st.write('Daily simple returns')
 
