@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+<<<<<<< HEAD
 import plotly.express as px
 import Functions
 from datetime import date, timedelta
@@ -26,3 +27,20 @@ fig.update_layout(dict={
     
 })
 fig.show()
+=======
+import pandas as pd
+import Functions
+from datetime import date,timedelta
+import plotly.graph_objects as go
+import streamlit as st
+
+stocks = ['M&M','TCS','INFY']
+
+tickers = st.selectbox("Select the stock",options=stocks)
+
+data = Functions.make_all_data(tickers,date.today()-timedelta(days=180),date.today())
+
+data.index = pd.to_datetime(data.index)
+
+st.write(data)
+>>>>>>> 8bdaa34e196263023f9e7eb9b68e175511a2c3ea

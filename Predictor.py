@@ -1,3 +1,4 @@
+from tracemalloc import start
 import pandas as pd
 import numpy as np
 import math
@@ -13,14 +14,14 @@ from tqdm import tqdm
 import warnings
 import plotly.graph_objects as go
 import Functions
-import streamlit as st
-#stocks = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
-#stocks = stocks[stocks['SERIES'] == 'EQ']
+#import streamlit as st
+
 today = datetime.today()
 start_date = today - timedelta(days=1825)
 end_date = today
 data = Functions.get_all_data()
-tickers = st.selectbox("Select the stock symbol",data['Symbol'])
+#tickers = st.selectbox("Select the stock symbol",data['Symbol'])
+tickers = ['TCS']
 df = pd.DataFrame()
 
 df = Functions.make_data(tickers, start_date, end_date)
@@ -54,7 +55,11 @@ index_min = min(range(len(aic)), key=aic.__getitem__)
 model = ARIMA(df, order=parameters[index_min])
 model_fit = model.fit()
 # print(model_fit.summary())
+<<<<<<< HEAD
+y = model_fit.predict(start=1825,end=1855)
+=======
 y = model_fit.predict(start=len(df),end=len(df)+30)
+>>>>>>> 3087d8d2875028fe82d077c2f8888074ceb653b8
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=df.index,y=df['TCS'],
             mode = 'lines',

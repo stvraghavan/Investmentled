@@ -7,12 +7,24 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 def get_50data():
+<<<<<<< HEAD
     symbols = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/ind_nifty50list.csv")
     return symbols
 
 def get_all_data():
     symbols = pd.read_csv("D:/Tilak Files/Sem-9/Stockfolio/EQUITY_L.csv")
+=======
+    symbols = pd.read_csv("Pages/Data/ind_nifty50list.csv")
+>>>>>>> 8bdaa34e196263023f9e7eb9b68e175511a2c3ea
     return symbols
+
+def get_all_data():
+    symbols = pd.read_csv("Pages/Data/EQUITY_L.csv")
+    return symbols
+
+def get_metrics():
+    metrics = pd.read_csv("Pages/Data/Metrics.csv",index_col=0)
+    return metrics
 
 def make_data(stocksymbols,startdate,end_date):
     data_frame = pd.DataFrame()
@@ -29,6 +41,18 @@ def make_data(stocksymbols,startdate,end_date):
             pass
     return data_frame
 
+def make_all_data(stocksymbols,startdate,end_date):
+    data_frame = pd.DataFrame()
+    try:
+        data = gh(symbol=stocksymbols,start=startdate, end=(end_date))
+        data.drop(['Symbol'], axis=1,inplace=True)
+        data_frame = data
+        # print("Successfully gathered data")
+    except:
+        # print("Fail")
+        pass
+    return data_frame
+
 def daily_simple_return(data_frame):
     dsr = data_frame.pct_change(1)
     dsr.dropna(inplace=True)
@@ -36,7 +60,11 @@ def daily_simple_return(data_frame):
     return dsr
 
 def daily_simple_return_percent(data_frame):
+<<<<<<< HEAD
     Avg_daily = dsr.mean().rename('Average Return')
+=======
+    Avg_daily = data_frame.mean().rename('Average Return')
+>>>>>>> 8bdaa34e196263023f9e7eb9b68e175511a2c3ea
     Avg_daily = Avg_daily*100
     return Avg_daily
 
