@@ -1,4 +1,4 @@
-# stockfolio
+# Stockfolio
 Stockfolio was developed to be a localy hostable application built with python using streamlit.
 For setting up this application locally,
 There are two methods:
