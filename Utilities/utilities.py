@@ -17,4 +17,4 @@ metrics['Average Return'] = avg_ret
 metrics['Volatility'] = risk
 metrics = (metrics.sort_values(by=['Average Return','Volatility'],ascending=False))
 
-metrics.to_csv("Pages/Data/Metrics.csv")
+metrics.to_csv("D:/Tilak Files/Sem-9/Stockfolio/Pages/Data/Metrics.csv")
