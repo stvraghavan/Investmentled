@@ -1,6 +1,7 @@
 # Stockfolio
 Stockfolio was developed to be a localy hostable application built with python using streamlit.
 For setting up this application locally,
+*Python is required for this project*
 There are two methods:
 
 Method 1
