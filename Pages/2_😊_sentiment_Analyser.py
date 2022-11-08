@@ -17,7 +17,7 @@ nltk.download('vader_lexicon') #required for Sentiment Analysis
 
 st.set_page_config(page_title="Sentiment Analysis",page_icon="😊")
 
-st.title("Stockfolio💲💲💲")
+st.title("Investmetled💲💲💲")
 
 tab1,tab2 = st.tabs(["Google News","Twitter"])
 
