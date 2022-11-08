@@ -17,7 +17,7 @@ from Functions import make_data,get_50data,get_all_data,word_cloud,daily_simple_
 
 st.set_page_config(page_title="Stock Tracker",page_icon="🎯")
 
-st.title("Stockfolio💲💲💲")
+st.title("Investmentled💲💲💲")
 
 tab1,tab2 = st.tabs(["Stock Tracker","Portfolio Optimiser"])
 
